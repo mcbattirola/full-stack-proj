@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/mcbattirola/full-stack-proj#readme",
   "dependencies": {
-    "express": "^4.16.4",
-    "body-parser": "*"
+    "@hapi/joi": "^15.0.0",
+    "body-parser": "*",
+    "express": "^4.16.4"
   }
 }
