@@ -1,11 +1,24 @@
 const express = require("express");
 const Joi = require("@hapi/joi");
+const helmet = require("helmet");
+const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const path = require("path");
-
+const logger = require("./Middlewares/logger");
+const authenticate = require("./Middlewares/authenticate");
 const app = express();
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`app: ${app.get("env")}`);
+
+//Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //key=value&key=value
+app.use(express.static("public"));
+app.use(helmet());
+app.use(morgan("tiny")); //for logging
+app.use(logger);
+app.use(authenticate);
 
 //fake database for now, just for debugging
 const accounts = [
