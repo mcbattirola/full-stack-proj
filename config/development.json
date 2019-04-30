@@ -1,0 +1,7 @@
+{
+  "name": "Ekki - Development",
+  "mail": {
+    "host": "dev-mail-server",
+    "password": "development_pass"
+  }
+}

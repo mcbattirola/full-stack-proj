@@ -2,13 +2,17 @@ const express = require("express");
 const Joi = require("@hapi/joi");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const config = require("config");
 const bodyParser = require("body-parser");
 const path = require("path");
-const logger = require("./Middlewares/logger");
-const authenticate = require("./Middlewares/authenticate");
+const logger = require("./middlewares/logger");
+const authenticate = require("./middlewares/authenticate");
 const app = express();
 
-console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+//Configuration
+console.log("Application name:", config.get("name"));
+console.log("Mail server:", config.get("mail.host"));
+console.log("mail password:", config.get("mail.password"));
 console.log(`app: ${app.get("env")}`);
 
 //Middlewares
