@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
   res.send("its alive!");
 });
 
-app.get("/api/account", (req, res) => {
+app.get("/api/accounts", (req, res) => {
   res.send(accounts);
 });
 
@@ -51,19 +51,9 @@ app.get("/api/account/:id", (req, res) => {
 });
 
 app.post("/api/accounts", (req, res) => {
-  const schema = {
-    number: Joi.number()
-      .min(3)
-      .required(),
-    user: Joi.number()
-      .min(3)
-      .required()
-  };
-
-  const result = Joi.validate(req.body, schema);
-  if (result.error) {
-    // 400 Bad Request
-    res.status(400).send(result.error);
+  const { error } = validateAccount(req.body); // result. error
+  if (error) {
+    res.status(400).send(error.details[0].message);
     return;
   }
 
@@ -76,3 +66,36 @@ app.post("/api/accounts", (req, res) => {
   accounts.push(account);
   res.send(account);
 });
+
+app.put("/api/accounts/:id", (req, res) => {
+  //look up for the account
+  const acc = accounts.find(c => c.id === parseInt(req.params.id));
+
+  // return 404 if it doesnt exist
+  if (!acc) {
+    res.status(404).send("Account with the given ID was not found");
+  }
+
+  // 400 Bad Request
+  const { error } = validateAccount(req.body); // result. error
+  if (error) {
+    res.status(400).send(error.details[0].message);
+    return;
+  }
+
+  //update
+  acc.number = req.body.number;
+  acc.user = req.body.user;
+  res.send(ac);
+});
+
+function validateAccount(acc) {
+  const schema = {
+    number: Joi.number()
+      .min(3)
+      .required(),
+    user: Joi.number().required()
+  };
+
+  return Joi.validate(acc, schema);
+}
