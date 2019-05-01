@@ -1,36 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const Joi = require("@hapi/joi");
 const mongoose = require("mongoose");
 const databaseDebugger = require("debug")("app:db");
-
-//makes a class from db schema
-const Account = mongoose.model(
-  "Account",
-  new mongoose.Schema({
-    number: { type: Number, require: true },
-    name: { type: String, required: true, minlength: 3, maxlength: 255 },
-    ownerId: { type: Number, required: true },
-    date: { type: Date, default: Date.now },
-    active: Boolean
-  })
-);
-
-//schema for accounts comming through api calls
-function validateAccount(acc) {
-  const schema = {
-    number: Joi.number()
-      .min(3)
-      .required(),
-    name: Joi.string()
-      .required()
-      .min(3)
-      .max(255),
-    ownerId: Joi.number().required()
-  };
-
-  return Joi.validate(acc, schema);
-}
+const { Account, validate } = require("../models/accounts");
 
 module.exports = router;
 
@@ -59,7 +31,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   //check if the body of the call was ok
-  const { error } = validateAccount(req.body);
+  const { error } = validate(req.body);
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
@@ -84,7 +56,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   // 400 Bad Request
-  const { error } = validateAccount(req.body); // result. error
+  const { error } = validate(req.body); // result. error
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
