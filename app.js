@@ -9,7 +9,7 @@ const logger = require("./middleware/logger");
 const authenticate = require("./middleware/authenticate");
 const startupDebugger = require("debug")("app:startup");
 const databaseDebugger = require("debug")("app:db");
-const accounts = require("./routes/accounts");
+const users = require("./routes/users");
 const home = require("./routes/home");
 
 const app = express();
@@ -35,7 +35,7 @@ app.use(logger);
 app.use(authenticate);
 
 //Routing
-app.use("/api/accounts", accounts);
+app.use("/api/users", users);
 app.use("/", home);
 
 //PORT listening

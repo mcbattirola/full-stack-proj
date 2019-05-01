@@ -5,6 +5,6 @@
     "password": "development_pass"
   },
   "db": {
-    "path": "mongodb://localhost:27017/YourDB"
+    "path": "mongodb://localhost:27017/Ekki"
   }
 }
