@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const config = require("config");
@@ -13,11 +14,16 @@ const home = require("./routes/home");
 
 const app = express();
 
+//Mongo connection
+databaseDebugger("===Starting Mongo Connection===");
+mongoose
+  .connect(config.get("db.path"), { useNewUrlParser: true })
+  .then(() => databaseDebugger("Connected to mongodb"))
+  .catch(() => databaseDebugger("Failed to connected to mongodb"));
+
 //Configuration
 startupDebugger("Application name:", config.get("name"));
-startupDebugger("Mail server:", config.get("mail.host"));
-startupDebugger("mail password:", config.get("mail.password"));
-startupDebugger(`app: ${app.get("env")}`);
+startupDebugger(`app environment: ${app.get("env")}`);
 
 //Middlewares
 app.use(express.json());
@@ -27,11 +33,12 @@ app.use(helmet());
 app.use(morgan("tiny")); //for logging
 app.use(logger);
 app.use(authenticate);
+
 //Routing
 app.use("/api/accounts", accounts);
 app.use("/", home);
 
-//PORT
+//PORT listening
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`server started on port ${port}`);
