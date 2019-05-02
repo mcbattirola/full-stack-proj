@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
 const creditCardSchema = new mongoose.Schema({
-  number: { type: Number, required: true, length: 16 }
+  number: { type: Number, required: true, min: 10000000, max: 99999999 }
 });
 
 //makes a class from mongoose schema

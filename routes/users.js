@@ -155,6 +155,130 @@ router.post("/:id/contacts/", async (req, res) => {
   }
 });
 
+//transfers
+const { Transfer, validateTransfers } = require("../models/transfer");
+router.get("/:id/transfers/", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user ? user.transfers : "Cannot find user with the given ID.");
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.get("/:id/transfers/:transferId", async (req, res) => {
+  try {
+    const user = await User.findById({
+      _id: req.params.id
+    });
+    if (!user) {
+      // 404 resource not found
+      res.status(404).send("User with the given ID was not found");
+    }
+    const transfer = user.transfers.id(req.params.transferId);
+    if (!transfer) {
+      // 404 resource not found
+      res.status(404).send("Transfer with the given ID was not found");
+    }
+    res.send(transfer);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.post("/:id/transfers/", async (req, res) => {
+  //check if the body of the call was ok
+
+  console.log("--------------------");
+  console.log("post transfer method called");
+  console.log("--------------------");
+
+  // const { error } = validateUser(req.body);
+  // if (error) {
+  //   res.status(400).send(error.details[0].message);
+  //   return;
+  // }
+
+  let user = await User.findById(req.params.id);
+  if (!user) res.status(404).send("User with the given ID was not found");
+
+  const transfer = populateTransfer(req);
+  transfer.date = Date.now;
+  databaseDebugger("transfer: ", transfer);
+  user.transfers.push(transfer);
+  //save in database
+  try {
+    user = await user.save();
+    databaseDebugger(user);
+    res.send(user);
+  } catch (err) {
+    databaseDebugger(err);
+    res.status(400).send(err.message);
+  }
+});
+
+//credit cards
+const { CreditCard, validateCreditCards } = require("../models/creditCard");
+router.get("/:id/creditCards/", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user ? user.creditCards : "Cannot find user with the given ID.");
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.get("/:id/creditCards/:creditCardId", async (req, res) => {
+  try {
+    const user = await User.findById({
+      _id: req.params.id
+    });
+    if (!user) {
+      // 404 resource not found
+      res.status(404).send("User with the given ID was not found");
+    }
+    const creditCard = user.creditCards.id(req.params.creditCardId);
+    if (!creditCard) {
+      // 404 resource not found
+      res.status(404).send("CC with the given ID was not found");
+    }
+    res.send(creditCard);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.post("/:id/creditCards/", async (req, res) => {
+  //check if the body of the call was ok
+
+  console.log("--------------------");
+  console.log("post creditCards method called");
+  console.log("--------------------");
+
+  // const { error } = validateUser(req.body);
+  // if (error) {
+  //   res.status(400).send(error.details[0].message);
+  //   return;
+  // }
+
+  let user = await User.findById(req.params.id);
+  if (!user) res.status(404).send("User with the given ID was not found");
+
+  const creditCard = populateCreditCard(req);
+  databaseDebugger("user: ", user);
+  databaseDebugger("creditCard: ", creditCard);
+  user.creditCards.push(creditCard);
+  //save in database
+  try {
+    user = await user.save();
+    databaseDebugger(user);
+    res.send(user);
+  } catch (err) {
+    databaseDebugger(err);
+    res.status(400).send(err.message);
+  }
+});
+
 //helper methods
 function populateUser(req) {
   return new User({
@@ -177,6 +301,20 @@ function populateContact(req) {
     kt: req.body.kt,
     name: req.body.name,
     account: req.body.account
+  });
+}
+function populateTransfer(req) {
+  return new Transfer({
+    email: req.body.email,
+    kt: req.body.kt,
+    name: req.body.name,
+    account: req.body.account,
+    amount: req.body.amount
+  });
+}
+function populateCreditCard(req) {
+  return new CreditCard({
+    number: req.body.number
   });
 }
 

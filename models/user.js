@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
   creation_date: { type: Date },
   contacts: { type: [contactSchema] },
   transfers: { type: [transferSchema] },
-  credit_cards: { type: [creditCardSchema] }
+  creditCards: { type: [creditCardSchema] }
 });
 
 userSchema.plugin(uniqueValidator);
