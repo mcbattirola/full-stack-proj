@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     trim: true
   },
-  account: { type: Number, required: true, length: 8, index: { unique: true } },
+  account: { type: Number, required: true, length: 8, unique: true },
   balance: { type: Number, required: true },
   creation_date: { type: Date },
   contacts: { type: [contactSchema] },
