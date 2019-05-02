@@ -6,12 +6,12 @@ const config = require("config");
 const bodyParser = require("body-parser");
 const path = require("path");
 const logger = require("./middleware/logger");
-const authenticate = require("./middleware/authenticate");
 const startupDebugger = require("debug")("app:startup");
 const databaseDebugger = require("debug")("app:db");
 const users = require("./routes/users");
 const home = require("./routes/home");
 const contacts = require("./routes/contacts");
+const auth = require("./routes/auth");
 
 const app = express();
 
@@ -33,11 +33,11 @@ app.use(express.static("public"));
 app.use(helmet());
 app.use(morgan("tiny")); //for logging
 app.use(logger);
-app.use(authenticate);
 
 //Routing
 app.use("/", home);
 app.use("/api/users", users);
+app.use("/api/auth", auth);
 // app.use("/api/users/:id/contacts", contacts);
 
 //PORT listening

@@ -4,6 +4,8 @@ const Joi = require("@hapi/joi");
 const { contactSchema } = require("./contact");
 const { transferSchema } = require("./transfer");
 const { creditCardSchema } = require("./creditCard");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -13,18 +15,16 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     validate: /(.+)@(.+){2,}\.(.+){2,}/,
     trim: true,
-    unique: true,
-    index: true
+    unique: true
   },
-  password: { type: String, required: true, minlength: 4, maxlength: 255 },
+  password: { type: String, required: true, minlength: 4, maxlength: 1024 },
   kt: { type: Number, required: true, unique: true },
   name: {
     type: String,
     required: true,
     minlength: 3,
     maxlength: 255,
-    trim: true,
-    index: { unique: true }
+    trim: true
   },
   account: { type: Number, required: true, length: 8, index: { unique: true } },
   balance: { type: Number, required: true },
@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
   transfers: { type: [transferSchema] },
   creditCards: { type: [creditCardSchema] }
 });
+
+userSchema.methods.generateAuthToken = function() {
+  return jwt.sign({ _id: this._id }, config.get("jwtPrivateKey"));
+};
 
 userSchema.plugin(uniqueValidator);
 

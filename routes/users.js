@@ -1,77 +1,89 @@
 const express = require("express");
 const router = express.Router();
+const _ = require("lodash");
 const mongoose = require("mongoose");
 const databaseDebugger = require("debug")("app:db");
+const bcrypt = require("bcrypt");
+const auth = require("../middleware/auth");
 
 const { User, validateUser } = require("../models/user");
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const users = await User.find().sort({ name: 1 });
-    res.send(users);
+
+    res.send(_.map(users, u => _.pick(u, ["_id", "name", "email", "kt"])));
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/self", auth, async (req, res) => {
   try {
-    const result = await User.findById(req.params.id);
+    const result = await User.findById(req.user._id);
     // const acc = users.find(c => c.id === parseInt(req.params.id));
     if (!result) {
       // 404 resource not found
       res.status(404).send("User with the given ID was not found");
     }
-    res.send(result);
+
+    res.send(_.pick(result, ["_id", "name", "email", "kt", "balance"]));
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
+//create user
 router.post("/", async (req, res) => {
-  //check if the body of the call was ok
-
-  console.log("--------------------");
-  console.log("post method called");
-  console.log("--------------------");
-
   const { error } = validateUser(req.body);
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
   }
 
-  let user = populateUser(req);
+  let user = populateUserFromRequest(req);
+  console.log("user: ", user);
+
+  //checks if the email is already used
+  const unavailable = await User.findOne({ email: req.body.email });
+  if (unavailable)
+    return res.status(400).send("Email already registered in our database");
+
   //assign an account number
   currentMaxAccount = await User.findOne().sort("-account");
   user.account = currentMaxAccount ? currentMaxAccount.account + 1 : 0;
+
+  //starting balance as 100 for debugging reasons
+  user.balance = 100;
   //assign creation_date
-  user.creation_date = Date.now;
+  user.creation_date = new Date();
+
+  //hashing password
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
 
   //save in database
   try {
     user = await user.save();
+
     databaseDebugger(user);
-    res.send(user);
+    const token = user.generateAuthToken();
+    res
+      .header("x-auth-token", token)
+      .send(_.pick(user, ["name", "email", "account", "kt", "balance"]));
   } catch (err) {
     databaseDebugger(err);
     res.status(400).send(err.message);
   }
 });
 
-router.put("/:id", async (req, res) => {
-  // 400 Bad Request
-  // const { error } = validate(req.body); // result. error
-  // if (error) {
-  //   res.status(400).send(error.details[0].message);
-  //   return;
-  // }
-
-  const user = populateUser(req);
-  user._id = req.params.id;
+//update user
+router.put("/self", auth, async (req, res) => {
+  const user = populateUserFromRequest(req);
+  user._id = req.user._id;
   //look up for the user and update
   try {
-    const acc = await User.findByIdAndUpdate(req.params.id, user, {
+    const acc = await User.findByIdAndUpdate(req.user._id, user, {
       new: true
     });
     databaseDebugger(acc);
@@ -84,9 +96,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+//delete user
+router.delete("/self", auth, async (req, res) => {
   try {
-    const acc = await User.findByIdAndRemove(req.params.id);
+    const acc = await User.findByIdAndRemove(req.user._id);
     if (!acc) res.status(404).send("User with the given ID was not found");
     res.send(acc);
   } catch (error) {
@@ -96,19 +109,19 @@ router.delete("/:id", async (req, res) => {
 
 //contacts
 const { Contact, validateContacts } = require("../models/contact");
-router.get("/:id/contacts/", async (req, res) => {
+router.get("/self/contacts/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user._id);
     res.send(user ? user.contacts : "Cannot find user with the given ID.");
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
-router.get("/:id/contacts/:contactId", async (req, res) => {
+router.get("/self/contacts/:contactId", auth, async (req, res) => {
   try {
     const user = await User.findById({
-      _id: req.params.id
+      _id: req.user._id
     });
     if (!user) {
       // 404 resource not found
@@ -125,7 +138,7 @@ router.get("/:id/contacts/:contactId", async (req, res) => {
   }
 });
 
-router.post("/:id/contacts/", async (req, res) => {
+router.post("/self/contacts/", auth, async (req, res) => {
   //check if the body of the call was ok
 
   console.log("--------------------");
@@ -138,7 +151,7 @@ router.post("/:id/contacts/", async (req, res) => {
   //   return;
   // }
 
-  let user = await User.findById(req.params.id);
+  let user = await User.findById(req.user._id);
   if (!user) res.status(404).send("User with the given ID was not found");
 
   const contact = populateContact(req);
@@ -157,19 +170,19 @@ router.post("/:id/contacts/", async (req, res) => {
 
 //transfers
 const { Transfer, validateTransfers } = require("../models/transfer");
-router.get("/:id/transfers/", async (req, res) => {
+router.get("/self/transfers/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user._id);
     res.send(user ? user.transfers : "Cannot find user with the given ID.");
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
-router.get("/:id/transfers/:transferId", async (req, res) => {
+router.get("/self/transfers/:transferId", auth, async (req, res) => {
   try {
     const user = await User.findById({
-      _id: req.params.id
+      _id: req.paramreq.user._id
     });
     if (!user) {
       // 404 resource not found
@@ -186,7 +199,7 @@ router.get("/:id/transfers/:transferId", async (req, res) => {
   }
 });
 
-router.post("/:id/transfers/", async (req, res) => {
+router.post("/self/transfers/", auth, async (req, res) => {
   //check if the body of the call was ok
 
   console.log("--------------------");
@@ -199,7 +212,7 @@ router.post("/:id/transfers/", async (req, res) => {
   //   return;
   // }
 
-  let user = await User.findById(req.params.id);
+  let user = await User.findById(req.user._id);
   if (!user) res.status(404).send("User with the given ID was not found");
 
   const transfer = populateTransfer(req);
@@ -219,19 +232,19 @@ router.post("/:id/transfers/", async (req, res) => {
 
 //credit cards
 const { CreditCard, validateCreditCards } = require("../models/creditCard");
-router.get("/:id/creditCards/", async (req, res) => {
+router.get("/self/creditCards/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user._id);
     res.send(user ? user.creditCards : "Cannot find user with the given ID.");
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
-router.get("/:id/creditCards/:creditCardId", async (req, res) => {
+router.get("/self/creditCards/:creditCardId", auth, async (req, res) => {
   try {
     const user = await User.findById({
-      _id: req.params.id
+      _id: req.user._id
     });
     if (!user) {
       // 404 resource not found
@@ -248,7 +261,7 @@ router.get("/:id/creditCards/:creditCardId", async (req, res) => {
   }
 });
 
-router.post("/:id/creditCards/", async (req, res) => {
+router.post("/self/creditCards/", auth, async (req, res) => {
   //check if the body of the call was ok
 
   console.log("--------------------");
@@ -261,7 +274,7 @@ router.post("/:id/creditCards/", async (req, res) => {
   //   return;
   // }
 
-  let user = await User.findById(req.params.id);
+  let user = await User.findById(req.user._id);
   if (!user) res.status(404).send("User with the given ID was not found");
 
   const creditCard = populateCreditCard(req);
@@ -280,7 +293,7 @@ router.post("/:id/creditCards/", async (req, res) => {
 });
 
 //helper methods
-function populateUser(req) {
+function populateUserFromRequest(req) {
   return new User({
     email: req.body.email,
     password: req.body.password,

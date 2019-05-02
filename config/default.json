@@ -1,3 +1,4 @@
 {
-  "name": "Ekki"
+  "name": "Ekki",
+  "jwtPrivateKey": "this_shouldnt_be_on_code"
 }
