@@ -37,7 +37,9 @@ function validateContact(contact) {
     name: Joi.string()
       .min(1)
       .max(255),
-    userId: Joi.string()
+    userId: Joi.string(),
+    account: Joi.number(),
+    kt: Join.number()
   };
 
   return Joi.validate(contact, schema);

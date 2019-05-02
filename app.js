@@ -11,6 +11,7 @@ const startupDebugger = require("debug")("app:startup");
 const databaseDebugger = require("debug")("app:db");
 const users = require("./routes/users");
 const home = require("./routes/home");
+const contacts = require("./routes/contacts");
 
 const app = express();
 
@@ -35,8 +36,9 @@ app.use(logger);
 app.use(authenticate);
 
 //Routing
-app.use("/api/users", users);
 app.use("/", home);
+app.use("/api/users", users);
+// app.use("/api/users/:id/contacts", contacts);
 
 //PORT listening
 const port = process.env.PORT || 3000;

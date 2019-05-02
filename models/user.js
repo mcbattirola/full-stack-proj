@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 const Joi = require("@hapi/joi");
 const { contactSchema } = require("./contact");
 const { transferSchema } = require("./transfer");
@@ -12,7 +13,8 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     validate: /(.+)@(.+){2,}\.(.+){2,}/,
     trim: true,
-    unique: true
+    unique: true,
+    index: true
   },
   password: { type: String, required: true, minlength: 4, maxlength: 255 },
   kt: { type: Number, required: true, unique: true },
@@ -22,15 +24,17 @@ const userSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 255,
     trim: true,
-    unique: true
+    index: { unique: true }
   },
-  account: { type: Number, required: true, length: 8, unique: true },
-  balance: { type: Number, required: true, default: 0 },
-  creation_date: { type: Date, default: Date.now },
-  contacts: { type: [contactSchema], default: [] },
-  transfers: { type: [transferSchema], default: [] },
-  credit_cards: { type: [creditCardSchema], default: [] }
+  account: { type: Number, required: true, length: 8, index: { unique: true } },
+  balance: { type: Number, required: true },
+  creation_date: { type: Date },
+  contacts: { type: [contactSchema] },
+  transfers: { type: [transferSchema] },
+  credit_cards: { type: [creditCardSchema] }
 });
+
+userSchema.plugin(uniqueValidator);
 
 //makes a class from mongoose schema
 const User = mongoose.model("User", userSchema);
@@ -48,8 +52,8 @@ function validateUser(user) {
       .required()
       .min(3)
       .max(255),
-    password: Joi.number(),
-    kt: Joi.number(),
+    password: Joi.string(),
+    kt: Joi.number().unsafe(),
     account: Joi.number()
   };
 
