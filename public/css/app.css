@@ -87,7 +87,14 @@ body {
 .balance {
   font-size: 36px;
   color: #dae1e7;
+  font-weight: 500;
 }
+
+.spinner-border {
+  margin-top: 10rem;
+  margin-left: 50%;
+}
+
 .transfer {
   font-size: 18px;
   color: #dae1e7;

@@ -19,8 +19,10 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.get("/self", auth, async (req, res) => {
+  console.log("-----GET USER SELF-----");
   try {
     const result = await User.findById(req.user._id);
+
     // const acc = users.find(c => c.id === parseInt(req.params.id));
     if (!result) {
       // 404 resource not found
