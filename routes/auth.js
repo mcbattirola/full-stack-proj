@@ -9,6 +9,7 @@ const Joi = require("@hapi/joi");
 const { User } = require("../models/user");
 
 router.post("/", async (req, res) => {
+  console.log("AUTH POST REQUESTED: ", req.body);
   const failedLoginMessage = "Invalid email or password.";
   const { error } = validateAuth(req.body);
   if (error) {
@@ -23,7 +24,7 @@ router.post("/", async (req, res) => {
   if (!validPassword) return res.status(400).send(failedLoginMessage);
 
   const token = user.generateAuthToken();
-  res.send(token);
+  res.send({ token });
 });
 
 function validateAuth(request) {

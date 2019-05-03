@@ -1,7 +1,5 @@
 "use strict";
-
 const e = React.createElement;
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -9,7 +7,11 @@ class App extends React.Component {
   }
 
   render() {
-    return React.createElement("h1", null, " hello from react");
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(Login, null)
+    );
   }
 }
 
