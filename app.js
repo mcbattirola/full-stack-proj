@@ -38,6 +38,7 @@ app.use(logger);
 app.use("/", home);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+app.get("*", home);
 // app.use("/api/users/:id/contacts", contacts);
 
 //PORT listening

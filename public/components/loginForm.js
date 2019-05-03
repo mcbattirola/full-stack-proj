@@ -12,8 +12,6 @@ class LoginForm extends React.Component {
   }
 
   handleLogin = () => {
-    console.log("login clicado");
-    console.log("state:", this.state);
     fetch("http://localhost:3000/api/auth/", {
       method: "post",
       headers: {
@@ -27,9 +25,12 @@ class LoginForm extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
+        console.log(result);
         this.setState({
           fail: false
         });
+
+        window.location.href = "http://localhost:3000/main/" + result.token;
       })
       .catch(error => {
         this.setState({
@@ -39,14 +40,12 @@ class LoginForm extends React.Component {
   };
 
   updateEmailValue = evt => {
-    console.log("update email");
     this.setState({
       email: evt.target.value
     });
   };
 
   updatePasswordValue = evt => {
-    console.log("update pass");
     this.setState({
       password: evt.target.value
     });
@@ -67,7 +66,7 @@ class LoginForm extends React.Component {
       //     height: "72"
       //   }),
 
-      React.createElement("h1", { className: "login-logo" }, "logo"),
+      React.createElement("h1", { className: "login-logo" }, "Ekki"),
       React.createElement(
         "h1",
         {
@@ -124,7 +123,7 @@ class LoginForm extends React.Component {
         "button",
         {
           className: "btn btn-lg btn-block btn-login",
-          type: "submit",
+          type: "button",
           onClick: this.handleLogin
         },
         "Sign in"

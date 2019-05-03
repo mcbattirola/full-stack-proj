@@ -1,3 +1,23 @@
+html {
+  height: 100% !important;
+}
+
+body {
+  height: 100%;
+}
+.navbar {
+  background-color: #dae1e7;
+  color: #183661;
+}
+
+#root {
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #183661;
+  position: relative;
+  min-height: 100vh;
+}
+
 .form-signin {
   width: 100%;
   max-width: 330px;
@@ -32,20 +52,6 @@
   align-items: center;
 }
 
-body {
-  height: 100%;
-}
-
-html {
-  height: 100% !important;
-}
-
-#root {
-  height: 100% !important;
-  width: 100% !important;
-  background-color: #183661;
-}
-
 .btn-login {
   margin-top: 20px;
   background-color: #dae1e7;
@@ -68,6 +74,7 @@ html {
 
 .login-fail {
   color: #dd6b4d;
+  font-size: 22px;
 }
 
 .login-under {
@@ -75,4 +82,75 @@ html {
 }
 .login-logo {
   color: #dae1e7;
+}
+
+.balance {
+  font-size: 36px;
+  color: #dae1e7;
+}
+.transfer {
+  font-size: 18px;
+  color: #dae1e7;
+}
+.transfer:hover {
+  cursor: pointer;
+  color: white;
+  text-decoration: underline;
+}
+
+.balance-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 7rem;
+}
+
+.container-foot {
+  margin-top: 7.5rem;
+  font-size: 20px;
+  color: #dae1e7;
+}
+
+.footer-cards {
+  margin-top: 5px;
+}
+.footer-cards:hover {
+  cursor: pointer;
+  color: white;
+  text-decoration: underline;
+}
+
+@media only screen and (min-width: 340px) {
+  .balance {
+    font-size: 40px;
+    color: #dae1e7;
+  }
+  .transfer {
+    font-size: 20px;
+    color: #dae1e7;
+  }
+  .balance-container {
+    margin-top: 8rem;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .balance {
+    font-size: 52px;
+    color: #dae1e7;
+  }
+  .transfer {
+    font-size: 26px;
+    color: #dae1e7;
+  }
+  .balance-container {
+    margin-top: 10rem;
+  }
+
+  .container-foot {
+    margin-top: 10rem;
+    font-size: 20px;
+    color: #dae1e7;
+  }
+  .footer-cards {
+    margin-top: 12px;
+  }
 }

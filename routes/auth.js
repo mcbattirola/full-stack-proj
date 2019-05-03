@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const databaseDebugger = require("debug")("app:db");
 const bcrypt = require("bcrypt");
 const Joi = require("@hapi/joi");
-
+const path = require("path");
 const { User } = require("../models/user");
 
 router.post("/", async (req, res) => {
@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
   if (!validPassword) return res.status(400).send(failedLoginMessage);
 
   const token = user.generateAuthToken();
+  //res.send({ token });
   res.send({ token });
 });
 

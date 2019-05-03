@@ -9,7 +9,7 @@ class NavBar extends React.Component {
     return React.createElement(
       "nav",
       {
-        className: "navbar navbar-expand-lg navbar-dark bg-dark"
+        className: "navbar navbar-expand-lg navbar-light"
       },
       React.createElement(
         "a",
@@ -17,7 +17,7 @@ class NavBar extends React.Component {
           className: "navbar-brand",
           href: "#"
         },
-        "Navbar"
+        "Ekki"
       ),
       React.createElement(
         "button",
@@ -31,7 +31,7 @@ class NavBar extends React.Component {
           "aria-label": "Toggle navigation"
         },
         React.createElement("span", {
-          className: "navbar-toggler-icon"
+          className: "navbar-toggler-icon "
         })
       ),
       React.createElement(
