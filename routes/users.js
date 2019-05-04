@@ -83,6 +83,11 @@ router.post("/", async (req, res) => {
 router.put("/self", auth, async (req, res) => {
   const user = populateUserFromRequest(req);
   user._id = req.user._id;
+  const { error } = validateUser(req.body);
+  if (error) {
+    res.status(400).send(error.details[0].message);
+    return;
+  }
   //look up for the user and update
   try {
     const acc = await User.findByIdAndUpdate(req.user._id, user, {
