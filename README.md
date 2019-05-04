@@ -12,7 +12,7 @@ Após isso, você já pode entrar no localhost:3000 pelo browser
 
 ### Estado atual da aplicação
 Servidor:
-- O backend está desenvolvido, salvando datos, criptografando senhas, com todos os endpoints que a aplicação necessida. 
+- O backend está desenvolvido, salvando dados, criptografando senhas, com todos os endpoints que a aplicação necessida. 
 - Algumas regras de negócio e integração entre objetos ainda não são garantidas pelo servidor.
 
 Front end
