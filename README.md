@@ -99,6 +99,7 @@ Inclui uma transferência. Exemplo de body:
 	"name": "Clark Kent",
 	"account": 445,
 	"amount": -500
+	
 **Obs:** Ainda não está fazendo verificações nem atualizando os valores como saldo das contas afetadas. Um montante negativo significa que foi enviado, positivo significa que o usuário recebeu a transação.
 
 Cartão de crédito
