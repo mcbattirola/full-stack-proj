@@ -78,6 +78,7 @@ Retorna informação mais detalhada do contato do usuário.
 
 - POST /api/users/self/contacts/
 Cria um contato do usuário. Exemplo de body:
+
 	"email": "exemplo@gmail.com",
 	"kt": "2242232",
 	"name": "Bruce Wayne",
@@ -92,7 +93,8 @@ Retorna a transferência com mais detalhes.
 
 - POST/api/users/self/transfers
 Inclui uma transferência. Exemplo de body:
-"email": "amigo@gmail.com",
+
+	"email": "amigo@gmail.com",
 	"kt": "111222333",
 	"name": "Clark Kent",
 	"account": 445,
@@ -108,6 +110,7 @@ Retorna informações mais detalhadas sobre o cartão do usuário.
 
 - POST/api/users/self/creditCards
 Cria um cartão de crédito. Exemplo de body:
+
 	"number": "12345678"
 
 
