@@ -10,6 +10,10 @@ body {
   color: #183661;
 }
 
+.App {
+  height: 100%;
+}
+
 #root {
   height: 100% !important;
   width: 100% !important;

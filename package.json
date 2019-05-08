@@ -1,25 +1,25 @@
 {
-  "name": "full-stack-proj",
+  "name": "Ekki",
   "version": "1.0.0",
   "description": "full stack project",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mcbattirola/full-stack-proj.git"
+    "client-install": "cd client && npm install",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Matheus C Battirola",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mcbattirola/full-stack-proj/issues"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.14.6"
   },
-  "homepage": "https://github.com/mcbattirola/full-stack-proj#readme",
   "dependencies": {
     "@hapi/joi": "^15.0.0",
     "bcrypt": "^3.0.6",
     "body-parser": "*",
+    "concurrently": "^3.6.1",
     "config": "^3.1.0",
     "debug": "^4.1.1",
     "express": "^4.16.4",

@@ -12,7 +12,7 @@ Após isso, você já pode entrar no localhost:3000 pelo browser
 
 ### Estado atual da aplicação
 Servidor:
-- O backend está desenvolvido, salvando datos, criptografando senhas, com todos os endpoints que a aplicação necessida. 
+- O backend está desenvolvido, salvando dados, criptografando senhas, com todos os endpoints que a aplicação necessida. 
 - Algumas regras de negócio e integração entre objetos ainda não são garantidas pelo servidor.
 
 Front end
@@ -78,6 +78,7 @@ Retorna informação mais detalhada do contato do usuário.
 
 - POST /api/users/self/contacts/
 Cria um contato do usuário. Exemplo de body:
+
 	"email": "exemplo@gmail.com",
 	"kt": "2242232",
 	"name": "Bruce Wayne",
@@ -92,11 +93,13 @@ Retorna a transferência com mais detalhes.
 
 - POST/api/users/self/transfers
 Inclui uma transferência. Exemplo de body:
-"email": "amigo@gmail.com",
+
+	"email": "amigo@gmail.com",
 	"kt": "111222333",
 	"name": "Clark Kent",
 	"account": 445,
 	"amount": -500
+	
 **Obs:** Ainda não está fazendo verificações nem atualizando os valores como saldo das contas afetadas. Um montante negativo significa que foi enviado, positivo significa que o usuário recebeu a transação.
 
 Cartão de crédito
@@ -108,6 +111,7 @@ Retorna informações mais detalhadas sobre o cartão do usuário.
 
 - POST/api/users/self/creditCards
 Cria um cartão de crédito. Exemplo de body:
+
 	"number": "12345678"
 
 
