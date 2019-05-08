@@ -6,6 +6,7 @@ Também é necessário a porta 5000 liberada para o servidor e a 3000 para o ser
 
 Então:
 > npm install
+
 > npm run dev
 
 Após isso, você já pode entrar no localhost:3000 pelo browser
