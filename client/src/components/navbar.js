@@ -1,10 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 
 class Navbar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleLogOut = () => {
     localStorage.setItem("TOKEN", null);
     window.location.href = "/";

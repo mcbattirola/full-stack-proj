@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import "../App.css";
+import SignUpModal from "../components/signUpModal";
 
 class Login extends React.Component {
   constructor(props) {
@@ -8,12 +9,17 @@ class Login extends React.Component {
     this.state = {
       login: "",
       password: "",
-      fail: false
+      fail: false,
+      signUpFormState: {
+        email: "",
+        password: "",
+        name: "NOME TESTE 321 123",
+        kt: ""
+      }
     };
   }
 
   handleLogin = () => {
-    console.log(this.state);
     fetch("/api/auth/", {
       method: "post",
       headers: {
@@ -27,7 +33,6 @@ class Login extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
-        console.log(result);
         this.setState({
           fail: false
         });
@@ -55,48 +60,63 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className="login-container form-signin text-center">
-        <form className="form-signin">
-          <h1 className="login-logo">Ekki</h1>
-          <h1 className="h3 mb-3 font-weight-normal login-title">
-            Please sign in
-          </h1>
-          <label htmlFor="inputEmail" className="sr-only">
-            Email address
-          </label>
-          <input
-            type="email"
-            id="inputEmail"
-            className="form-control"
-            placeholder="Email address"
-            // value={this.state.email}
-            onChange={this.updateEmailValue}
-            autoComplete="current-password"
-          />
-          <label htmlFor="inputPassword" className="sr-only">
-            Password
-          </label>
-          <input
-            type="password"
-            id="inputPassword"
-            className="form-control"
-            placeholder="Password"
-            value={this.state.password}
-            onChange={this.updatePasswordValue}
-            autoComplete="current-password"
-          />
-          <button
-            className="btn btn-lg btn-block btn-login"
-            type="button"
-            onClick={() => {
-              this.handleLogin();
-            }}
-          >
-            Sign in
-          </button>
-          <p className="mt-5 mb-3 text-muted login-under">© 2019</p>
-        </form>
-      </div>
+      <React.Fragment>
+        <div className="login-container form-signin text-center">
+          <form className="form-signin">
+            <h1 className="login-logo">Ekki</h1>
+            <h1 className="h3 mb-3 font-weight-normal login-title">
+              Please sign in
+            </h1>
+            <label htmlFor="inputEmail" className="sr-only">
+              Email address
+            </label>
+            <input
+              type="email"
+              id="inputEmail"
+              className="form-control"
+              placeholder="Email address"
+              value={this.state.email}
+              onChange={this.updateEmailValue}
+              autoComplete="current-password"
+            />
+            <label htmlFor="inputPassword" className="sr-only">
+              Password
+            </label>
+            <input
+              type="password"
+              id="inputPassword"
+              className="form-control"
+              placeholder="Password"
+              value={this.state.password}
+              onChange={this.updatePasswordValue}
+              autoComplete="current-password"
+            />
+            <button
+              className="btn btn-lg btn-block btn-login"
+              type="button"
+              onClick={() => {
+                this.handleLogin();
+              }}
+            >
+              Sign in
+            </button>
+            <button
+              className="btn btn-lg btn-block btn-create_acc"
+              type="button"
+              // onClick={() => {
+              //   this.handleCreateAccount();
+              // }}
+              data-toggle="modal"
+              data-target="#createAccountModal"
+            >
+              Create Account
+            </button>
+            <p className="mt-5 mb-3 text-muted login-under">© 2019</p>
+          </form>
+        </div>
+
+        <SignUpModal id="createAccountModal" />
+      </React.Fragment>
     );
   }
 }

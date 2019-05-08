@@ -72,6 +72,13 @@ body {
   color: #dae1e7;
 }
 
+.btn-create_acc {
+  margin-top: 20px;
+  background-color: #dd6b4d;
+  border-color: #dd6b4d;
+  color: #dae1e7;
+}
+
 .login-title {
   color: #dae1e7;
 }
