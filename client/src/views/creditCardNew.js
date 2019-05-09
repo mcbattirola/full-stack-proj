@@ -7,15 +7,13 @@ class CreditCardNew extends Component {
     name: "",
     number: "",
     loaded: false,
-    new: true
+    new: true,
+    formEnabled: true,
+    successToastTime: 2000
   };
 
-  componentDidMount() {
-    let id = "";
-    let urlSplit = window.location.pathname.split("credit_cards/card/");
-    if (urlSplit.length > 1 && urlSplit[1]) {
-      id = urlSplit[1];
-    }
+  async componentDidMount() {
+    const id = this.getIdFromUrl();
     if (id) {
       this.setState({
         new: false
@@ -23,32 +21,17 @@ class CreditCardNew extends Component {
       const token = localStorage.getItem("TOKEN");
       if (!token) window.location.href = "/";
 
-      fetch("/api/users/self/creditCards/" + id, {
+      let result = await fetch("/api/users/self/creditCards/" + id, {
         method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-auth-token": token
-        }
-      })
-        .then(res => res.json())
-        .then(
-          result => {
-            this.setState({
-              loaded: true,
-              new: false,
-              name: result.name,
-              number: result.number
-            });
-            console.log("card: \n", result);
-          },
-          error => {
-            this.setState({
-              loaded: true,
-              error
-            });
-          }
-        );
+        headers: this.getHeader()
+      });
+      result = await result.json();
+      this.setState({
+        loaded: true,
+        new: false,
+        name: result.name,
+        number: result.number
+      });
     } else {
       this.setState({
         loaded: true
@@ -56,30 +39,90 @@ class CreditCardNew extends Component {
     }
   }
 
-  handleButtonClick = () => {
-    const token = localStorage.getItem("TOKEN");
-    const jsonBody = JSON.stringify({
-      name: this.state.name || "",
-      number: this.state.number || ""
-    });
+  getIdFromUrl = function() {
+    let urlSplit = window.location.pathname.split("credit_cards/card/");
+    if (urlSplit.length > 1 && urlSplit[1]) return urlSplit[1];
+    return "";
+  };
 
-    fetch("/api/users/self/creditCards", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "x-auth-token": token
-      },
-      body: jsonBody
-    })
-      .then(res => res.json())
-      .then(result => {
-        this.setState({
-          fail: false
+  getBodyFromForm = function() {
+    return JSON.stringify({
+      name: this.state.name || "",
+      number: this.state.number || "",
+      _id: this.getIdFromUrl()
+    });
+  };
+
+  getHeader = function() {
+    const token = localStorage.getItem("TOKEN");
+    const header = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "x-auth-token": token
+    };
+    return header;
+  };
+
+  handleButtonClick = async () => {
+    this.enableForm(false);
+    const fetchMethod = this.state.new ? "post" : "put";
+    try {
+      let result = await fetch("/api/users/self/creditCards", {
+        method: fetchMethod,
+        headers: this.getHeader(),
+        body: this.getBodyFromForm()
+      });
+      result = await result.json();
+
+      this.setState({
+        fail: false
+      });
+      toast.success("Credit Card successfully created!", {
+        position: "top-right",
+        autoClose: this.state.successToastTime,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true
+      });
+      setTimeout(() => {
+        window.location.href = "/credit_cards";
+      }, this.state.successToastTime);
+    } catch (error) {
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true
+      });
+      this.enableForm(true);
+      this.setState({
+        fail: true
+      });
+    }
+  };
+
+  handleDelete = async () => {
+    this.enableForm(false);
+    console.log("delete called");
+    const token = localStorage.getItem("TOKEN");
+    const id = this.getIdFromUrl();
+    if (id) {
+      try {
+        let result = await fetch("/api/users/self/creditCards/", {
+          method: "DELETE",
+          headers: this.getHeader(),
+          body: JSON.stringify({
+            _id: id
+          })
         });
-        toast.success("Credit Card successfully created!", {
+        result = await result.json();
+
+        toast.success("Credit Card successfully deleted!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: this.state.successToastTime,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
@@ -88,10 +131,9 @@ class CreditCardNew extends Component {
 
         setTimeout(() => {
           window.location.href = "/credit_cards";
-        }, 3000);
-      })
-      .catch(error => {
-        toast.error(error.message, {
+        }, this.state.successToastTime);
+      } catch (ex) {
+        toast.error(ex.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -102,7 +144,8 @@ class CreditCardNew extends Component {
         this.setState({
           fail: true
         });
-      });
+      }
+    }
   };
 
   updateNameValue = evt => {
@@ -117,6 +160,12 @@ class CreditCardNew extends Component {
     });
   };
 
+  enableForm = state => {
+    this.setState({
+      formEnabled: state
+    });
+  };
+
   render() {
     if (!this.state.loaded) {
       return <h1>loading!</h1>;
@@ -128,7 +177,7 @@ class CreditCardNew extends Component {
     const buttomText = newCard ? "Create" : "Save";
     return (
       <React.Fragment>
-        <CrudTitle title={title} />
+        <CrudTitle title={title} backUrl="/credit_cards" />
         <div className="modal-body crud-form mb-2">
           <form>
             <div className="form-group">
@@ -142,6 +191,7 @@ class CreditCardNew extends Component {
                 onChange={this.updateNameValue}
                 autoComplete="off"
                 maxLength="255"
+                disabled={!this.state.formEnabled ? "disabled" : ""}
               />
             </div>
             <div className="form-group">
@@ -155,19 +205,27 @@ class CreditCardNew extends Component {
                 onChange={this.updateNumberValue}
                 autoComplete="off"
                 maxLength="8"
+                disabled={!this.state.formEnabled ? "disabled" : ""}
               />
             </div>
+
             <button
               type="button"
               className="btn btn-confirm"
               onClick={this.handleButtonClick}
+              disabled={!this.state.formEnabled ? "disabled" : ""}
             >
               {buttomText}
             </button>
             {newCard ? (
               ""
             ) : (
-              <button type="button" className="btn btn-warning">
+              <button
+                type="button"
+                className="btn btn-warning btn-space"
+                onClick={this.handleDelete}
+                disabled={!this.state.formEnabled ? "disabled" : ""}
+              >
                 Delete
               </button>
             )}

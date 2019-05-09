@@ -4,7 +4,7 @@ class CrudTitle extends Component {
   state = {};
 
   handleBack = () => {
-    window.history.back();
+    window.location.href = this.props.backUrl ? this.props.backUrl : "/app";
     console.log("back clicked");
   };
 

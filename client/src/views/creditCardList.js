@@ -40,7 +40,7 @@ class CreditCardList extends Component {
     return (
       <React.Fragment>
         <CrudTitle title="Credit Cards" />
-        <div className="container">
+        <div className="container crud-container">
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-4">
               <AddCreditCard />

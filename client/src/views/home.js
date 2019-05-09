@@ -52,7 +52,7 @@ class Home extends React.Component {
             {this.state.loaded ? (
               <React.Fragment>
                 <div className="col-12 balance text-center">
-                  {this.state.user.balance}
+                  $ {this.state.user.balance.toFixed(2)}
                 </div>
                 <div className="col-12 transfer text-center">Transfer Now </div>
               </React.Fragment>

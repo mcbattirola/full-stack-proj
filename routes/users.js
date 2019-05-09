@@ -270,62 +270,50 @@ router.get("/self/creditCards/:creditCardId", auth, async (req, res) => {
 });
 
 router.post("/self/creditCards/", auth, async (req, res) => {
-  //check if the body of the call was ok
-
-  console.log("--------------------");
-  console.log("post creditCards method called");
-  console.log("--------------------");
-
-  // const { error } = validateCreditCards(req.body);
-  // if (error) {
-  //   res.status(400).send(error.details[0].message);
-  //   return;
-  // }
-
   let user = await User.findById(req.user._id);
   if (!user) res.status(404).send("User with the given ID was not found");
   console.log("user found!, req body:", req.body);
-
   const creditCard = populateCreditCard(req);
-
-  //TODO: UPDATE USERS CREDIT CARD
-  // try {
-  //   const acc = await User.findByIdAndUpdate(req.user._id, user, {
-  //     new: true
-  //   });
-  //   databaseDebugger(acc);
-  //   // return 404 if it doesnt exist
-  //   if (!acc) res.status(404).send("User with the given ID was not found");
-  //   res.send(acc);
-  // } catch (err) {
-  //   databaseDebugger(err);
-  //   res.status(400).send(err.message);
-  // }
-});
-
-//update user
-router.put("/self/creditCards/", auth, async (req, res) => {
-  console.log("--------------------");
-  console.log("put creditCards method called");
-  console.log("--------------------");
-  let user = await User.findById(req.user._id);
-  if (!user) res.status(404).send("User with the given ID was not found");
-
-  const creditCard = populateCreditCard(req);
-
-  //look up for the user and update
+  console.log("creditCard: ", creditCard);
+  user.creditCards.push(creditCard);
+  //save in database
   try {
-    const acc = await User.findByIdAndUpdate(req.user._id, user, {
-      new: true
-    });
-    databaseDebugger(acc);
-    // return 404 if it doesnt exist
-    if (!acc) res.status(404).send("User with the given ID was not found");
-    res.send(acc);
+    user = await user.save();
+    databaseDebugger(user);
+    res.send(user);
   } catch (err) {
     databaseDebugger(err);
     res.status(400).send(err.message);
   }
+});
+
+//update cc
+router.put("/self/creditCards/", auth, async (req, res) => {
+  let user = await User.findById(req.user._id);
+  if (!user) res.status(404).send("User with the given ID was not found");
+
+  const updatedCreditCard = populateCreditCard(req);
+  const creditCard = user.creditCards.id(req.body._id);
+
+  //remove old version
+  creditCard.remove();
+
+  //add new one
+  user.creditCards.push(updatedCreditCard);
+
+  //save
+  user.save();
+  res.send(user);
+});
+
+router.delete("/self/creditCards/", auth, async (req, res) => {
+  let user = await User.findById(req.user._id);
+  if (!user) res.status(404).send("User with the given ID was not found");
+
+  const creditCard = user.creditCards.id(req.body._id);
+  creditCard.remove();
+  user.save();
+  res.send(user);
 });
 
 //helper methods
@@ -364,7 +352,8 @@ function populateTransfer(req) {
 function populateCreditCard(req) {
   return new CreditCard({
     number: req.body.number,
-    name: req.body.name
+    name: req.body.name,
+    _id: req.body._id
   });
 }
 
