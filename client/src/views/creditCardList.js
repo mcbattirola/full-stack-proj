@@ -25,7 +25,7 @@ class CreditCardList extends Component {
             loaded: true,
             creditCards: result
           });
-          console.log("user: \n", result);
+          console.log("cards: \n", result);
         },
         error => {
           this.setState({
@@ -46,8 +46,16 @@ class CreditCardList extends Component {
               <AddCreditCard />
             </div>
             {this.state.creditCards.map(card => (
-              <div className="col-12 col-sm-12 col-md-6 col-lg-4">
-                <CreditCardComponent name={card.name} number={card.number} />
+              <div
+                className="col-12 col-sm-12 col-md-6 col-lg-4"
+                onClick={this.handleCardClick}
+              >
+                <CreditCardComponent
+                  key={card._id}
+                  _id={card._id}
+                  name={card.name}
+                  number={card.number}
+                />
               </div>
             ))}
           </div>

@@ -55,7 +55,9 @@ body {
   display: flex;
   align-items: center;
 }
-
+.btn {
+  margin-top: 20px;
+}
 .btn-confirm {
   margin-top: 20px;
   background-color: #dae1e7;

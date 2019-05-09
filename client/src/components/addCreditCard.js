@@ -2,7 +2,7 @@ import React, { Component } from "react";
 class AddCreditCard extends Component {
   state = {};
   handleClick = () => {
-    window.location.href = "/credit_cards/new/";
+    window.location.href = "/credit_cards/card/";
   };
   render() {
     return (

@@ -35,7 +35,7 @@ class Routes extends Component {
             )}
           />
           <PrivateRoute
-            path="/credit_cards/new"
+            path="/credit_cards/card"
             component={() => (
               <React.Fragment>
                 <Navbar />

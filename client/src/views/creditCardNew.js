@@ -5,10 +5,58 @@ import { toast } from "react-toastify";
 class CreditCardNew extends Component {
   state = {
     name: "",
-    number: ""
+    number: "",
+    loaded: false,
+    new: true
   };
 
-  handleCreate = () => {
+  componentDidMount() {
+    let id = "";
+    let urlSplit = window.location.pathname.split("credit_cards/card/");
+    if (urlSplit.length > 1 && urlSplit[1]) {
+      id = urlSplit[1];
+    }
+    if (id) {
+      this.setState({
+        new: false
+      });
+      const token = localStorage.getItem("TOKEN");
+      if (!token) window.location.href = "/";
+
+      fetch("/api/users/self/creditCards/" + id, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "x-auth-token": token
+        }
+      })
+        .then(res => res.json())
+        .then(
+          result => {
+            this.setState({
+              loaded: true,
+              new: false,
+              name: result.name,
+              number: result.number
+            });
+            console.log("card: \n", result);
+          },
+          error => {
+            this.setState({
+              loaded: true,
+              error
+            });
+          }
+        );
+    } else {
+      this.setState({
+        loaded: true
+      });
+    }
+  }
+
+  handleButtonClick = () => {
     const token = localStorage.getItem("TOKEN");
     const jsonBody = JSON.stringify({
       name: this.state.name || "",
@@ -70,9 +118,17 @@ class CreditCardNew extends Component {
   };
 
   render() {
+    if (!this.state.loaded) {
+      return <h1>loading!</h1>;
+    }
+
+    const newCard = this.state.new;
+    console.log("render, new? ", newCard);
+    const title = newCard ? "New Credit Card" : "Edit - " + this.state.name;
+    const buttomText = newCard ? "Create" : "Save";
     return (
       <React.Fragment>
-        <CrudTitle title="New Credit Card" />
+        <CrudTitle title={title} />
         <div className="modal-body crud-form mb-2">
           <form>
             <div className="form-group">
@@ -104,10 +160,17 @@ class CreditCardNew extends Component {
             <button
               type="button"
               className="btn btn-confirm"
-              onClick={this.handleCreate}
+              onClick={this.handleButtonClick}
             >
-              Create
+              {buttomText}
             </button>
+            {newCard ? (
+              ""
+            ) : (
+              <button type="button" className="btn btn-warning">
+                Delete
+              </button>
+            )}
           </form>
         </div>
       </React.Fragment>
