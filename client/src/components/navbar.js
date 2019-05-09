@@ -9,7 +9,7 @@ class Navbar extends React.Component {
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/app">
           Ekki
         </a>
         <button
@@ -26,7 +26,7 @@ class Navbar extends React.Component {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item active">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/app">
                 Home <span className="sr-only">(current)</span>
               </a>
             </li>

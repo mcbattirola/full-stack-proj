@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import HomeMenu from "../components/homeMenu";
 
 class Home extends React.Component {
   constructor(props) {
@@ -46,7 +47,6 @@ class Home extends React.Component {
     console.log("render chamado, loaded: ", this.state.loaded);
     return (
       <React.Fragment>
-        <Navbar />
         <div className="container balance-container">
           <div className="">
             {this.state.loaded ? (
@@ -60,6 +60,9 @@ class Home extends React.Component {
               <h1> loading</h1>
             )}
           </div>
+        </div>
+        <div className="container menu-container">
+          <HomeMenu />
         </div>
       </React.Fragment>
     );

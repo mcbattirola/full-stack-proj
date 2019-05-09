@@ -1,5 +1,5 @@
 import React from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 class SignUpModal extends React.Component {
@@ -25,10 +25,10 @@ class SignUpModal extends React.Component {
 
   handleCreateAccount = () => {
     const jsonBody = JSON.stringify({
-      email: this.state.email,
-      password: this.state.password,
-      name: this.state.name,
-      kt: this.state.kt
+      email: this.state.email || "",
+      password: this.state.password || "",
+      name: this.state.name || "",
+      kt: this.state.kt || ""
     });
     console.log("jsonbody:", jsonBody);
     fetch("/api/users/", {

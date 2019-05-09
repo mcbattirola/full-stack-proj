@@ -1,6 +1,7 @@
 import React from "react";
 import "../App.css";
 import SignUpModal from "../components/signUpModal";
+import { ToastContainer, toast } from "react-toastify";
 
 class Login extends React.Component {
   constructor(props) {
@@ -40,6 +41,14 @@ class Login extends React.Component {
         window.location.href = "/app/";
       })
       .catch(error => {
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
         this.setState({
           fail: true
         });
@@ -92,7 +101,7 @@ class Login extends React.Component {
               autoComplete="current-password"
             />
             <button
-              className="btn btn-lg btn-block btn-login"
+              className="btn btn-lg btn-block btn-confirm"
               type="button"
               onClick={() => {
                 this.handleLogin();

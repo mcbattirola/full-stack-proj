@@ -40,6 +40,7 @@ router.post("/", async (req, res) => {
   const { error } = validateUser(req.body);
   if (error) {
     res.status(400).send(error.details[0].message);
+    console.log(error.details[0].message);
     return;
   }
 
@@ -275,7 +276,7 @@ router.post("/self/creditCards/", auth, async (req, res) => {
   console.log("post creditCards method called");
   console.log("--------------------");
 
-  // const { error } = validateUser(req.body);
+  // const { error } = validateCreditCards(req.body);
   // if (error) {
   //   res.status(400).send(error.details[0].message);
   //   return;
@@ -283,10 +284,9 @@ router.post("/self/creditCards/", auth, async (req, res) => {
 
   let user = await User.findById(req.user._id);
   if (!user) res.status(404).send("User with the given ID was not found");
-
+  console.log("user found!, req body:", req.body);
   const creditCard = populateCreditCard(req);
-  databaseDebugger("user: ", user);
-  databaseDebugger("creditCard: ", creditCard);
+  console.log("creditCard: ", creditCard);
   user.creditCards.push(creditCard);
   //save in database
   try {
@@ -334,7 +334,8 @@ function populateTransfer(req) {
 }
 function populateCreditCard(req) {
   return new CreditCard({
-    number: req.body.number
+    number: req.body.number,
+    name: req.body.name
   });
 }
 

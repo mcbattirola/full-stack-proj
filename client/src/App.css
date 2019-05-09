@@ -56,16 +56,16 @@ body {
   align-items: center;
 }
 
-.btn-login {
+.btn-confirm {
   margin-top: 20px;
   background-color: #dae1e7;
   border-color: #dae1e7;
   color: #dd6b4d;
 }
-.btn-login:hover,
-.btn-login:focus,
-.btn-login:active,
-.btn-login.active {
+.btn-confirm:hover,
+.btn-confirm:focus,
+.btn-confirm:active,
+.btn-confirm.active {
   margin-top: 20px;
   background-color: #dd6b4d;
   border-color: #dae1e7;
@@ -137,6 +137,27 @@ body {
   text-decoration: underline;
 }
 
+a {
+  text-decoration: none;
+}
+
+.menu-item a {
+  color: #dae1e7;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.menu-item:hover a {
+  color: #dae1e7;
+  text-decoration: underline;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.menu-container {
+  margin-top: 7.5rem;
+}
+
 @media only screen and (min-width: 340px) {
   .balance {
     font-size: 40px;
@@ -171,4 +192,83 @@ body {
   .footer-cards {
     margin-top: 12px;
   }
+  .menu-container {
+    margin-top: 10 rem;
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .menu-container {
+    margin-top: 18rem;
+  }
+}
+
+.crud-title {
+  color: #dae1e7;
+  padding: 2rem;
+}
+
+.title-container {
+  margin: 20px;
+}
+.crud-back {
+  color: #dae1e7;
+}
+.crud-back:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.crud-form {
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #dae1e7;
+  border: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  border-color: #dae1e7;
+}
+@media only screen and (min-width: 576px) {
+  .crud-form {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+}
+@media only screen and (min-width: 720px) {
+  .crud-form {
+    margin-left: 15%;
+    margin-right: 20%;
+  }
+}
+@media only screen and (min-width: 960px) {
+  .crud-form {
+    margin-left: 18%;
+    margin-right: 23%;
+  }
+}
+
+.credit-card-coponent {
+  background: #dae1e7;
+  color: #dd6b4d;
+  border-radius: 12px;
+  padding: 20px 20px 20px 10px;
+  margin-top: 23px;
+  max-height: 105px;
+  min-height: 105px;
+}
+
+.credit-card-coponent:hover {
+  cursor: pointer;
+  border-color: #dd6b4d;
+  border: solid;
+}
+.credit-card-add {
+  background: #dd6b4d;
+  border-color: #dd6b4d;
+  border: solid;
+  border-width: 5px;
+  color: #dae1e7;
+}
+.credit-card-add:hover {
+  cursor: pointer;
 }
