@@ -2,13 +2,15 @@
 
 Para rodar o projeto, é necessário:
 mongodb instalado e rodando em localhost:27017 (ou modifique o arquivo config/development.json para a sua porta) e NPM.
-
+Também é necessário a porta 5000 liberada para o servidor e a 3000 para o server do client (via webpack).
 
 Então:
 > npm install
-> node app.js
+
+> npm run dev
 
 Após isso, você já pode entrar no localhost:3000 pelo browser
+
 
 ### Estado atual da aplicação
 Servidor:
@@ -25,14 +27,16 @@ Para mais informações,  ver TODO LIST.
 
 # Importante: Registrar usuários
 
-Ainda não foi implementado registro de usuários pela tela.
-Por hora, é necessário mandar um POST para http://localhost:3000/api/users/ com o seguinte body:
+###O REGISTRO DE USUÁRIO PELA TELA DO APP FOI IMPLEMENTADO.
 
+Caso necessário criar um usuário pela APi, é possível mandar um POST para http://localhost:3000/api/users/ com o seguinte body:
 		"email":"tony@gmail.com",
 		"kt":"46578798",
 		"name":"tony stark",
 		"password": "1234"
+		
 **kt?** Ekki é um banco islandês, não iria usar CPF!
+
 A senha fica criptografada no servidor.
 
 Em caso de sucesso, a API vai retornar o objeto inserido, com algumas informações a mais, geradas pelo servidor.
@@ -135,6 +139,6 @@ A aplicação web está apenas parcialmente implementada.
 
 ● Recuperação de senha.
 
-●Garantir certas regras de negócio no servidor.
+● Garantir certas regras de negócio no servidor.
 
 ● Não expor o token de acesso do usuário na URL.
