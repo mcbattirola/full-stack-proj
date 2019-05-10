@@ -12,14 +12,18 @@ Então:
 Após isso, você já pode entrar no localhost:3000 pelo browser
 
 
-### Estado atual da aplicação
+# Sobre as features
+
 Servidor:
 - O backend está desenvolvido, salvando dados, criptografando senhas, com todos os endpoints que a aplicação necessida. 
+
 - Algumas regras de negócio e integração entre objetos ainda não são garantidas pelo servidor.
 
-Front end
+Front end:
 
 - Login e cadastro de usuário funcionando. Crud de transferência entre contas, criação de cartão de crédito e de usuário implementados.
+
+- O número das contas são criados pelo servidor a partir do zero (para o primeiro usuário registrado).
 
 
 # TODO LIST
