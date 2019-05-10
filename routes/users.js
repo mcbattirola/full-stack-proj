@@ -14,7 +14,7 @@ router.get("/", auth, async (req, res) => {
 
     res.send(_.map(users, u => _.pick(u, ["_id", "name", "email", "kt"])));
   } catch (error) {
-    res.status(404).send(error.message);
+    res.status(404).send(JSON.stringify({ error: error.message }));
   }
 });
 
@@ -26,12 +26,16 @@ router.get("/self", auth, async (req, res) => {
     // const acc = users.find(c => c.id === parseInt(req.params.id));
     if (!result) {
       // 404 resource not found
-      res.status(404).send("User with the given ID was not found");
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "User with the given ID was not found" })
+        );
     }
 
     res.send(_.pick(result, ["_id", "name", "email", "kt", "balance"]));
   } catch (error) {
-    res.status(404).send(error.message);
+    res.status(404).send(JSON.stringify({ error: error.message }));
   }
 });
 
@@ -43,7 +47,7 @@ router.get("/:account", auth, async (req, res) => {
 
     res.send(_.map(user, u => _.pick(u, ["_id", "name", "email", "kt"])));
   } catch (error) {
-    res.status(404).send(error.message);
+    res.status(404).send(JSON.stringify({ error: error.message }));
   }
 });
 
@@ -110,7 +114,7 @@ router.put("/self", auth, async (req, res) => {
   user._id = req.user._id;
   const { error } = validateUser(req.body);
   if (error) {
-    res.status(400).send(error.details[0].message);
+    res.status(400).send(JSON.stringify({ error: error.details[0].message }));
     return;
   }
   //look up for the user and update
@@ -124,7 +128,7 @@ router.put("/self", auth, async (req, res) => {
     res.send(acc);
   } catch (err) {
     databaseDebugger(err);
-    res.status(400).send(err.message);
+    res.status(400).send(JSON.stringify({ error: err.message }));
   }
 });
 
@@ -132,7 +136,12 @@ router.put("/self", auth, async (req, res) => {
 router.delete("/self", auth, async (req, res) => {
   try {
     const acc = await User.findByIdAndRemove(req.user._id);
-    if (!acc) res.status(404).send("User with the given ID was not found");
+    if (!acc)
+      res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "User with the given ID was not found" })
+        );
     res.send(acc);
   } catch (error) {
     res.status(404).send(error.message);
@@ -144,9 +153,13 @@ const { Contact, validateContacts } = require("../models/contact");
 router.get("/self/contacts/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    res.send(user ? user.contacts : "Cannot find user with the given ID.");
+    res.send(
+      user
+        ? user.contacts
+        : JSON.stringify({ error: "Cannot find user with the given ID." })
+    );
   } catch (error) {
-    res.status(404).send(error.message);
+    res.status(404).send(JSON.stringify({ error: error.message }));
   }
 });
 
@@ -157,12 +170,20 @@ router.get("/self/contacts/:contactId", auth, async (req, res) => {
     });
     if (!user) {
       // 404 resource not found
-      res.status(404).send("User with the given ID was not found");
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "User with the given ID was not found" })
+        );
     }
     const contact = user.contacts.id(req.params.contactId);
     if (!contact) {
       // 404 resource not found
-      res.status(404).send("Contact with the given ID was not found");
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "Contact with the given ID was not found" })
+        );
     }
     res.send(contact);
   } catch (error) {
@@ -184,7 +205,10 @@ router.post("/self/contacts/", auth, async (req, res) => {
   // }
 
   let user = await User.findById(req.user._id);
-  if (!user) res.status(404).send("User with the given ID was not found");
+  if (!user)
+    return res
+      .status(404)
+      .send(JSON.stringify({ error: "User with the given ID was not found" }));
 
   const contact = populateContact(req);
   databaseDebugger("contact: ", contact);
@@ -196,7 +220,7 @@ router.post("/self/contacts/", auth, async (req, res) => {
     res.send(user);
   } catch (err) {
     databaseDebugger(err);
-    res.status(400).send(err.message);
+    res.status(400).send(JSON.stringify({ error: err.message }));
   }
 });
 
@@ -205,7 +229,11 @@ const { Transfer, validateTransfers } = require("../models/transfer");
 router.get("/self/transfers/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    res.send(user ? user.transfers : "Cannot find user with the given ID.");
+    res.send(
+      user
+        ? user.transfers
+        : JSON.stringify({ error: "Cannot find user with the given ID." })
+    );
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -218,12 +246,20 @@ router.get("/self/transfers/:transferId", auth, async (req, res) => {
     });
     if (!user) {
       // 404 resource not found
-      res.status(404).send("User with the given ID was not found");
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "User with the given ID was not found" })
+        );
     }
     const transfer = user.transfers.id(req.params.transferId);
     if (!transfer) {
       // 404 resource not found
-      res.status(404).send("Transfer with the given ID was not found");
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "Transfer with the given ID was not found" })
+        );
     }
     res.send(transfer);
   } catch (error) {
@@ -245,7 +281,10 @@ router.post("/self/transfers/", auth, async (req, res) => {
   // }
 
   let user = await User.findById(req.user._id);
-  if (!user) res.status(404).send("User with the given ID was not found");
+  if (!user)
+    return res
+      .status(404)
+      .send(JSON.stringify({ error: "User with the given ID was not found" }));
 
   const transfer = populateTransfer(req);
   transfer.date = Date.now;
@@ -267,7 +306,11 @@ const { CreditCard, validateCreditCards } = require("../models/creditCard");
 router.get("/self/creditCards/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    res.send(user ? user.creditCards : "Cannot find user with the given ID.");
+    res.send(
+      user
+        ? user.creditCards
+        : JSON.stringify({ error: "Cannot find user with the given ID." })
+    );
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -280,12 +323,18 @@ router.get("/self/creditCards/:creditCardId", auth, async (req, res) => {
     });
     if (!user) {
       // 404 resource not found
-      res.status(404).send("User with the given ID was not found");
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "User with the given ID was not found" })
+        );
     }
     const creditCard = user.creditCards.id(req.params.creditCardId);
     if (!creditCard) {
       // 404 resource not found
-      res.status(404).send("CC with the given ID was not found");
+      return res
+        .status(404)
+        .send(JSON.stringify({ error: "CC with the given ID was not found" }));
     }
     res.send(creditCard);
   } catch (error) {
@@ -295,7 +344,10 @@ router.get("/self/creditCards/:creditCardId", auth, async (req, res) => {
 
 router.post("/self/creditCards/", auth, async (req, res) => {
   let user = await User.findById(req.user._id);
-  if (!user) res.status(404).send("User with the given ID was not found");
+  if (!user)
+    return res
+      .status(404)
+      .send(JSON.stringify({ error: "User with the given ID was not found" }));
 
   const creditCard = populateCreditCard(req);
   user.creditCards.push(creditCard);
@@ -313,7 +365,10 @@ router.post("/self/creditCards/", auth, async (req, res) => {
 //update cc
 router.put("/self/creditCards/", auth, async (req, res) => {
   let user = await User.findById(req.user._id);
-  if (!user) res.status(404).send("User with the given ID was not found");
+  if (!user)
+    return res
+      .status(404)
+      .send(JSON.stringify({ error: "User with the given ID was not found" }));
 
   const updatedCreditCard = populateCreditCard(req);
   const creditCard = user.creditCards.id(req.body._id);
@@ -331,7 +386,10 @@ router.put("/self/creditCards/", auth, async (req, res) => {
 
 router.delete("/self/creditCards/", auth, async (req, res) => {
   let user = await User.findById(req.user._id);
-  if (!user) res.status(404).send("User with the given ID was not found");
+  if (!user)
+    return res
+      .status(404)
+      .send(JSON.stringify({ error: "User with the given ID was not found" }));
 
   const creditCard = user.creditCards.id(req.body._id);
   creditCard.remove();
