@@ -19,13 +19,19 @@ Servidor:
 
 Front end
 
-- Apenas o login e a página inicial foram implementadas até o momento.
-
-Para mais informações,  ver TODO LIST. 
+- Login e cadastro de usuário funcionando. Crud de transferência entre contas, criação de cartão de crédito e de usuário implementados.
 
 
+# TODO LIST
 
-# Importante: Registrar usuários
+● Histórico de transferências.
+
+● Recuperação de senha.
+
+● Garantir certas regras de negócio no servidor.
+
+
+# Importante: Registro de usuários
 
 ###O REGISTRO DE USUÁRIO PELA TELA DO APP FOI IMPLEMENTADO.
 
@@ -35,7 +41,7 @@ Caso necessário criar um usuário pela APi, é possível mandar um POST para ht
 		"name":"tony stark",
 		"password": "1234"
 		
-**kt?** Ekki é um banco islandês, não iria usar CPF!
+**kt?** Ekki é um banco islandês, não utiliza cpf
 
 A senha fica criptografada no servidor.
 
@@ -104,7 +110,6 @@ Inclui uma transferência. Exemplo de body:
 	"account": 445,
 	"amount": -500
 	
-**Obs:** Ainda não está fazendo verificações nem atualizando os valores como saldo das contas afetadas. Um montante negativo significa que foi enviado, positivo significa que o usuário recebeu a transação.
 
 Cartão de crédito
 - GET /api/users/self/creditCards
@@ -120,25 +125,3 @@ Cria um cartão de crédito. Exemplo de body:
 
 
 
-# Aplicação Web
-
-A aplicação web está apenas parcialmente implementada.
-É possível fazer login com o usuário e ver o saldo atual.
-
-# TODO LIST
-
-● Menu de opções para todas as features.
-
-● CRUD de cartão de crédito.
-
-● CRUD de contatos/favorecidos.
-
-● Transferência de dinheiro entre usuários.
-
-● Histórico de transferências.
-
-● Recuperação de senha.
-
-● Garantir certas regras de negócio no servidor.
-
-● Não expor o token de acesso do usuário na URL.
