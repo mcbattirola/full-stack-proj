@@ -18,7 +18,7 @@ const CreditCard = mongoose.model("CreditCard", creditCardSchema);
 //validate schema for Users comming through api calls
 function validateCreditCard(cc) {
   const schema = {
-    number: Joi.number().length(16),
+    number: Joi.number().max(16),
     name: Joi.string()
       .max(255)
       .required()
@@ -28,5 +28,5 @@ function validateCreditCard(cc) {
 }
 
 exports.CreditCard = CreditCard;
-exports.validate = validateCreditCard;
+exports.validateCreditCard = validateCreditCard;
 exports.creditCardSchema = creditCardSchema;

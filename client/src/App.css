@@ -290,6 +290,23 @@ a {
   border-color: #dd6b4d;
   border: solid;
 }
+
+.contact-coponent {
+  background: #dae1e7;
+  color: #dd6b4d;
+  border-radius: 12px;
+  padding: 15px 15px 15px 10px;
+  margin-top: 23px;
+  max-height: 115px;
+  min-height: 115px;
+}
+
+.contact-coponent:hover {
+  cursor: pointer;
+  border-color: #dd6b4d;
+  border: solid;
+}
+
 .credit-card-add {
   background: #dd6b4d;
   border-color: #dd6b4d;

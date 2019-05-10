@@ -41,11 +41,21 @@ router.get("/self", auth, async (req, res) => {
 
 router.get("/:account", auth, async (req, res) => {
   try {
-    const user = await User.find({ account: req.params.account }).sort({
-      name: 1
-    });
+    const result = await User.findOne({ account: req.params.account });
 
-    res.send(_.map(user, u => _.pick(u, ["_id", "name", "email", "kt"])));
+    // const acc = users.find(c => c.id === parseInt(req.params.id));
+    if (!result) {
+      // 404 resource not found
+      return res
+        .status(404)
+        .send(
+          JSON.stringify({ error: "User with the given ID was not found" })
+        );
+    }
+
+    res.send(
+      _.pick(result, ["_id", "name", "email", "kt", "balance", "account"])
+    );
   } catch (error) {
     res.status(404).send(JSON.stringify({ error: error.message }));
   }
@@ -211,7 +221,13 @@ router.post("/self/contacts/", auth, async (req, res) => {
       .send(JSON.stringify({ error: "User with the given ID was not found" }));
 
   const contact = populateContact(req);
-  databaseDebugger("contact: ", contact);
+  //populate contact kt
+  let contactUser = await User.findOne({ account: req.body.account });
+  if (!contactUser)
+    res.status(404).send(JSON.stringify({ error: "Contact was not found" }));
+
+  contact.kt = contactUser.kt;
+
   user.contacts.push(contact);
   //save in database
   try {
@@ -302,7 +318,7 @@ router.post("/self/transfers/", auth, async (req, res) => {
 });
 
 //credit cards
-const { CreditCard, validateCreditCards } = require("../models/creditCard");
+const { CreditCard, validateCreditCard } = require("../models/creditCard");
 router.get("/self/creditCards/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -343,6 +359,12 @@ router.get("/self/creditCards/:creditCardId", auth, async (req, res) => {
 });
 
 router.post("/self/creditCards/", auth, async (req, res) => {
+  // const { error } = validateCreditCard(req.body);
+  // if (error) {
+  //   res.status(400).send(JSON.stringify({ error: error.details[0].message }));
+  //   return;
+  // }
+
   let user = await User.findById(req.user._id);
   if (!user)
     return res
@@ -358,7 +380,7 @@ router.post("/self/creditCards/", auth, async (req, res) => {
     res.send(user);
   } catch (err) {
     databaseDebugger(err);
-    res.status(400).send(err.message);
+    res.status(400).send(JSON.stringify({ error: err.message }));
   }
 });
 

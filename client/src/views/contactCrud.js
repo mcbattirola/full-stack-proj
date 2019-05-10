@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 class ContactCrud extends Component {
   state = {
     name: "",
-    kt: "",
     account: "",
     loaded: true,
     new: true,
@@ -25,12 +24,6 @@ class ContactCrud extends Component {
     });
   };
 
-  updateKtValue = evt => {
-    this.setState({
-      kt: evt.target.value
-    });
-  };
-
   handleButtonClick = async () => {
     this.enableForm(false);
     const fetchMethod = this.state.new ? "post" : "put";
@@ -41,21 +34,35 @@ class ContactCrud extends Component {
         body: this.getBodyFromForm()
       });
       result = await result.json();
-
-      this.setState({
-        fail: false
-      });
-      toast.success("Contact successfully created!", {
-        position: "top-right",
-        autoClose: this.state.successToastTime,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true
-      });
-      setTimeout(() => {
-        window.location.href = "/contacts";
-      }, this.state.successToastTime);
+      if (!result.error) {
+        this.setState({
+          fail: false
+        });
+        toast.success("Contact successfully created!", {
+          position: "top-right",
+          autoClose: this.state.successToastTime,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
+        setTimeout(() => {
+          window.location.href = "/contacts";
+        }, this.state.successToastTime);
+      } else {
+        toast.error(result.error, {
+          position: "top-right",
+          autoClose: this.state.successToastTime,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
+        this.enableForm(true);
+        this.setState({
+          fail: true
+        });
+      }
     } catch (error) {
       toast.error(error.message, {
         position: "top-right",
@@ -75,10 +82,15 @@ class ContactCrud extends Component {
   getBodyFromForm = function() {
     return JSON.stringify({
       name: this.state.name || "",
-      kt: this.state.kt || "",
       account: this.state.account || "",
       _id: this.getIdFromUrl()
     });
+  };
+
+  getIdFromUrl = function() {
+    let urlSplit = window.location.pathname.split("contacts/card/");
+    if (urlSplit.length > 1 && urlSplit[1]) return urlSplit[1];
+    return "";
   };
 
   getHeader = function() {
@@ -97,6 +109,33 @@ class ContactCrud extends Component {
     });
   };
 
+  onBlurAccountNum = async () => {
+    try {
+      let result = await fetch("/api/users/" + this.state.account, {
+        method: "GET",
+        headers: this.getHeader()
+      });
+      result = await result.json();
+      console.log(result);
+      if (!result.error) {
+        this.setState({
+          name: result.name,
+          receiverFound: true
+        });
+      } else {
+        this.setState({
+          name: "",
+          receiverFound: false
+        });
+      }
+    } catch (ex) {
+      this.setState({
+        transferReceiver: "",
+        receiverFound: false
+      });
+    }
+  };
+
   render() {
     if (!this.state.loaded) {
       return <h1>loading!</h1>;
@@ -112,34 +151,6 @@ class ContactCrud extends Component {
         <div className="modal-body crud-form mb-2">
           <form>
             <div className="form-group">
-              <label htmlFor="inputCreditCardName">Name</label>
-              <input
-                type="text"
-                id="inputCreditCardName"
-                className="form-control"
-                placeholder="John Doe"
-                value={this.state.name}
-                onChange={this.updateNameValue}
-                autoComplete="off"
-                maxLength="255"
-                disabled={!this.state.formEnabled ? "disabled" : ""}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputCreditCardNumber">Kt</label>
-              <input
-                type="text"
-                id="inputCreditCardNumber"
-                className="form-control"
-                placeholder="00000000"
-                value={this.state.kt}
-                onChange={this.updateKtValue}
-                autoComplete="off"
-                maxLength="8"
-                disabled={!this.state.formEnabled ? "disabled" : ""}
-              />
-            </div>
-            <div className="form-group">
               <label htmlFor="inputCreditCardNumber">Account Number</label>
               <input
                 type="text"
@@ -148,9 +159,25 @@ class ContactCrud extends Component {
                 placeholder="00000000"
                 value={this.state.account}
                 onChange={this.updateAccountValue}
+                onBlur={this.onBlurAccountNum}
                 autoComplete="off"
                 maxLength="8"
                 disabled={!this.state.formEnabled ? "disabled" : ""}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="inputCreditCardName">Name</label>
+              <input
+                type="text"
+                id="inputCreditCardName"
+                className="form-control disabled"
+                placeholder=""
+                value={this.state.name}
+                onChange={this.updateNameValue}
+                autoComplete="off"
+                maxLength="255"
+                disabled="true"
               />
             </div>
 

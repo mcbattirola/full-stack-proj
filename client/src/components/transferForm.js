@@ -10,17 +10,23 @@ class TransferForm extends Component {
   };
 
   onBlurAccountNum = async () => {
-    console.log("this.state.accountNum: ", this.state.accountNum);
     try {
       let result = await fetch("/api/users/" + this.state.accountNum, {
         method: "GET",
         headers: this.getHeader()
       });
       result = await result.json();
-      this.setState({
-        transferReceiver: result[0].name,
-        receiverFound: true
-      });
+      if (!result.error) {
+        this.setState({
+          transferReceiver: result.name,
+          receiverFound: true
+        });
+      } else {
+        this.setState({
+          transferReceiver: "",
+          receiverFound: false
+        });
+      }
     } catch (ex) {
       this.setState({
         transferReceiver: "",

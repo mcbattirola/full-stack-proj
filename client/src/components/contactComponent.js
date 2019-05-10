@@ -3,17 +3,19 @@ class ContactComponent extends Component {
   state = {};
 
   handleContactClick = evt => {
-    window.location.href = "/contacts/contact/" + this.props._id;
+    this.props.handleClick
+      ? this.props.handleClick(this.props.account)
+      : (window.location.href = "/contacts/contact/" + this.props._id);
   };
 
   render() {
     return (
       <div
-        className="credit-card-coponent text-center"
+        className="contact-coponent text-center"
         onClick={this.handleContactClick}
       >
         <h3>{this.props.name}</h3>
-        <div>Account:{this.props.number}</div>
+        <div>Account:{this.props.account}</div>
         <div>Kt:{this.props.kt}</div>
       </div>
     );

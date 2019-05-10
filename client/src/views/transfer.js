@@ -36,6 +36,13 @@ class Transfer extends Component {
     return header;
   };
 
+  handleContactClick = acc => {
+    //alert(acc);
+    this.setState({
+      account: acc
+    });
+  };
+
   state = {};
   render() {
     return (
@@ -50,7 +57,10 @@ class Transfer extends Component {
               <div className="col-12 col-sm-12 col-md-6 crud-form-transfer contact-list">
                 <h2>Contact List</h2>
                 {this.state.loaded ? (
-                  <ContactList contactList={this.state.contacts} />
+                  <ContactList
+                    contactList={this.state.contacts}
+                    handleContactClick={this.handleContactClick}
+                  />
                 ) : (
                   <h2>Loading</h2>
                 )}
