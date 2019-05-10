@@ -5,8 +5,9 @@ import Home from "./views/home";
 import Login from "./views/login";
 import CreditCardList from "./views/creditCardList";
 import CreditCardNew from "./views/creditCardNew";
+import ContactCrud from "./views/contactCrud";
 import History from "./views/history";
-import Contacts from "./views/contacts";
+import ContactList from "./views/contactList";
 import Transfer from "./views/transfer";
 import Navbar from "./components/navbar";
 
@@ -45,11 +46,21 @@ class Routes extends Component {
             )}
           />
           <PrivateRoute
+            exact
             path="/contacts"
             component={() => (
               <React.Fragment>
                 <Navbar />
-                <Contacts />
+                <ContactList />
+              </React.Fragment>
+            )}
+          />
+          <PrivateRoute
+            path="/contacts/contact"
+            component={() => (
+              <React.Fragment>
+                <Navbar />
+                <ContactCrud />
               </React.Fragment>
             )}
           />

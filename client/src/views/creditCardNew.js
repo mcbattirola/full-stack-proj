@@ -26,12 +26,23 @@ class CreditCardNew extends Component {
         headers: this.getHeader()
       });
       result = await result.json();
-      this.setState({
-        loaded: true,
-        new: false,
-        name: result.name,
-        number: result.number
-      });
+      if (!result.error) {
+        this.setState({
+          loaded: true,
+          new: false,
+          name: result.name,
+          number: result.number
+        });
+      } else {
+        toast.error(result.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
+      }
     } else {
       this.setState({
         loaded: true
@@ -73,30 +84,36 @@ class CreditCardNew extends Component {
         body: this.getBodyFromForm()
       });
       result = await result.json();
-
-      this.setState({
-        fail: false
-      });
-      toast.success("Credit Card successfully created!", {
-        position: "top-right",
-        autoClose: this.state.successToastTime,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true
-      });
-      setTimeout(() => {
-        window.location.href = "/credit_cards";
-      }, this.state.successToastTime);
+      if (!result.error) {
+        this.setState({
+          fail: false
+        });
+        toast.success("Credit Card successfully created!", {
+          position: "top-right",
+          autoClose: this.state.successToastTime,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
+        setTimeout(() => {
+          window.location.href = "/credit_cards";
+        }, this.state.successToastTime);
+      } else {
+        this.enableForm(true);
+        this.setState({
+          fail: true
+        });
+        toast.error(result.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
+      }
     } catch (error) {
-      toast.error(error.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true
-      });
       this.enableForm(true);
       this.setState({
         fail: true

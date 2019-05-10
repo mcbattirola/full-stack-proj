@@ -9,7 +9,8 @@ class SignUpModal extends React.Component {
       name: "",
       email: "",
       password: "",
-      kt: ""
+      kt: "",
+      finished: false
     };
   }
 
@@ -42,7 +43,8 @@ class SignUpModal extends React.Component {
       .then(result => {
         if (!result.error) {
           this.setState({
-            fail: false
+            fail: false,
+            finished: true
           });
           toast.success("Account successfully created!", {
             position: "top-right",
