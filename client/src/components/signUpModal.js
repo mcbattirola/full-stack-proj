@@ -30,7 +30,6 @@ class SignUpModal extends React.Component {
       name: this.state.name || "",
       kt: this.state.kt || ""
     });
-    console.log("jsonbody:", jsonBody);
     fetch("/api/users/", {
       method: "post",
       headers: {
@@ -41,17 +40,28 @@ class SignUpModal extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
-        this.setState({
-          fail: false
-        });
-        toast.success("Account successfully created!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true
-        });
+        if (!result.error) {
+          this.setState({
+            fail: false
+          });
+          toast.success("Account successfully created!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true
+          });
+        } else {
+          toast.error(result.error, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true
+          });
+        }
       })
       .catch(error => {
         toast.error(error.message, {

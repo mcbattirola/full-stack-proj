@@ -34,11 +34,22 @@ class Login extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
-        this.setState({
-          fail: false
-        });
-        localStorage.setItem("TOKEN", result.token);
-        window.location.href = "/app/";
+        if (!result.error) {
+          this.setState({
+            fail: false
+          });
+          localStorage.setItem("TOKEN", result.token);
+          window.location.href = "/app/";
+        } else {
+          toast.error(result.error, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true
+          });
+        }
       })
       .catch(error => {
         toast.error(error.message, {

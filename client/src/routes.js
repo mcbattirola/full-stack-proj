@@ -7,6 +7,7 @@ import CreditCardList from "./views/creditCardList";
 import CreditCardNew from "./views/creditCardNew";
 import History from "./views/history";
 import Contacts from "./views/contacts";
+import Transfer from "./views/transfer";
 import Navbar from "./components/navbar";
 
 class Routes extends Component {
@@ -58,6 +59,15 @@ class Routes extends Component {
               <React.Fragment>
                 <Navbar />
                 <History />
+              </React.Fragment>
+            )}
+          />
+          <PrivateRoute
+            path="/transfer"
+            component={() => (
+              <React.Fragment>
+                <Navbar />
+                <Transfer />
               </React.Fragment>
             )}
           />

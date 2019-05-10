@@ -2,13 +2,6 @@ const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
 const contactSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    minlength: 3,
-    maxlength: 255,
-    validate: /(.+)@(.+){2,}\.(.+){2,}/,
-    trim: true
-  },
   kt: { type: Number, required: true },
   name: {
     type: String,
@@ -17,11 +10,11 @@ const contactSchema = new mongoose.Schema({
     maxlength: 255,
     trim: true
   },
-  account: { type: Number, required: true, length: 8 },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }
+  account: { type: Number, required: true, length: 8 }
+  // userId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User"
+  // }
 });
 
 //makes a class from mongoose schema

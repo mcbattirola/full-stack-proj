@@ -9,6 +9,7 @@ const logger = require("./middleware/logger");
 const startupDebugger = require("debug")("app:startup");
 const databaseDebugger = require("debug")("app:db");
 const users = require("./routes/users");
+const transfer = require("./routes/transfer");
 const home = require("./routes/home");
 const contacts = require("./routes/contacts");
 const auth = require("./routes/auth");
@@ -37,6 +38,7 @@ app.use(logger);
 //Routing
 app.use("/", home);
 app.use("/api/users", users);
+app.use("/api/transfer", transfer);
 app.use("/api/auth", auth);
 app.get("*", home);
 // app.use("/api/users/:id/contacts", contacts);

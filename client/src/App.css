@@ -23,6 +23,10 @@ body {
   min-height: 100vh;
 }
 
+.h100 {
+  height: 100%;
+}
+
 .form-signin {
   width: 100%;
   max-width: 330px;
@@ -237,6 +241,19 @@ a {
   border-width: 2px;
   border-radius: 5px;
   border-color: #dae1e7;
+}
+
+.crud-form-transfer {
+  color: #dae1e7;
+  border: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  border-color: #dae1e7;
+}
+
+.transfer-form {
+  padding: 10px;
+  color: #dae1e7;
 }
 
 @media only screen and (min-width: 576px) {

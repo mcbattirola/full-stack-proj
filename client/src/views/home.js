@@ -43,6 +43,10 @@ class Home extends React.Component {
       );
   }
 
+  handleTransferClick = () => {
+    window.location.href = "/transfer";
+  };
+
   render() {
     console.log("render chamado, loaded: ", this.state.loaded);
     return (
@@ -54,7 +58,12 @@ class Home extends React.Component {
                 <div className="col-12 balance text-center">
                   $ {this.state.user.balance.toFixed(2)}
                 </div>
-                <div className="col-12 transfer text-center">Transfer Now </div>
+                <div
+                  className="col-12 transfer text-center"
+                  onClick={this.handleTransferClick}
+                >
+                  Transfer Now
+                </div>
               </React.Fragment>
             ) : (
               <h1> loading</h1>

@@ -9,7 +9,7 @@ function auth(req, res, next) {
     const decoded = jwt.verify(token, config.get("jwtPrivateKey"));
 
     req.user = decoded;
-    console.log("on auth, req.body:", req.body);
+    console.log("\n-----\n on auth, req.body:", req.body);
     next();
   } catch (ex) {
     console.log(ex);

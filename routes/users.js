@@ -35,22 +35,46 @@ router.get("/self", auth, async (req, res) => {
   }
 });
 
+router.get("/:account", auth, async (req, res) => {
+  try {
+    const user = await User.find({ account: req.params.account }).sort({
+      name: 1
+    });
+
+    res.send(_.map(user, u => _.pick(u, ["_id", "name", "email", "kt"])));
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
 //create user
 router.post("/", async (req, res) => {
   const { error } = validateUser(req.body);
   if (error) {
-    res.status(400).send(error.details[0].message);
-    console.log(error.details[0].message);
-    return;
+    return res
+      .status(400)
+      .send(JSON.stringify({ error: error.details[0].message }));
   }
 
   let user = populateUserFromRequest(req);
   console.log("user: ", user);
 
+  //check if kt is already used
+  const unavailableKt = await User.findOne({ kt: req.body.kt });
+  if (unavailableKt)
+    return res
+      .status(400)
+      .send(JSON.stringify({ error: "Kt already registered in our database" }));
+
   //checks if the email is already used
-  const unavailable = await User.findOne({ email: req.body.email });
-  if (unavailable)
-    return res.status(400).send("Email already registered in our database");
+  const unavailableEmail = await User.findOne({ email: req.body.email });
+  if (unavailableEmail) {
+    return res
+      .status(400)
+      .send(
+        JSON.stringify({ error: "Email already registered in our database" })
+      );
+  }
 
   //assign an account number
   currentMaxAccount = await User.findOne().sort("-account");
@@ -76,7 +100,7 @@ router.post("/", async (req, res) => {
       .send(_.pick(user, ["name", "email", "account", "kt", "balance"]));
   } catch (err) {
     databaseDebugger(err);
-    res.status(400).send(err.message);
+    res.status(400).send(JSON.stringify({ error: err.message }));
   }
 });
 
@@ -272,9 +296,8 @@ router.get("/self/creditCards/:creditCardId", auth, async (req, res) => {
 router.post("/self/creditCards/", auth, async (req, res) => {
   let user = await User.findById(req.user._id);
   if (!user) res.status(404).send("User with the given ID was not found");
-  console.log("user found!, req body:", req.body);
+
   const creditCard = populateCreditCard(req);
-  console.log("creditCard: ", creditCard);
   user.creditCards.push(creditCard);
   //save in database
   try {

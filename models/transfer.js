@@ -2,25 +2,13 @@ const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
 const transferSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-    // required: true //turning it off for debugging
-  },
-  kt: { type: Number, required: true },
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-    maxlength: 255,
-    trim: true
-  },
   account: { type: Number, required: true, length: 8 },
   date: { type: Date, default: Date.now, required: true },
   amount: {
     type: Number,
     required: true
-  }
+  },
+  received: { type: Boolean }
 });
 
 //makes a class from mongoose schema
