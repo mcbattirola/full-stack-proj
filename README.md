@@ -34,6 +34,12 @@ Front end:
 
 ● Garantir certas regras de negócio no servidor.
 
+● Caso o valor da transferência seja maior que o saldo atual da conta, sinalizar o
+usuário que irá ser utilizado o cartão de crédito para completar a transação, caso
+não tenha cartão cadastrado, dar a opção de cadastro de um novo.
+
+● Transferências acima de $1000, usuário precisa colocar a senha (O servidor garante, mas a aplicação não pede para o usuário a senha ainda).
+
 
 # Importante: Registro de usuários
 
