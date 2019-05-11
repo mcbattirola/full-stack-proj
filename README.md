@@ -28,8 +28,6 @@ Front end:
 
 # TODO LIST
 
-● Histórico de transferências.
-
 ● Recuperação de senha.
 
 ● Garantir certas regras de negócio no servidor.
@@ -40,6 +38,7 @@ não tenha cartão cadastrado, dar a opção de cadastro de um novo.
 
 ● Transferências acima de $1000, usuário precisa colocar a senha (O servidor garante, mas a aplicação não pede para o usuário a senha ainda).
 
+● Refazer o design do app?
 
 # Importante: Registro de usuários
 
