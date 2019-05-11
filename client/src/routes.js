@@ -6,7 +6,7 @@ import Login from "./views/login";
 import CreditCardList from "./views/creditCardList";
 import CreditCardNew from "./views/creditCardNew";
 import ContactCrud from "./views/contactCrud";
-import History from "./views/history";
+import History from "./views/history.jsx";
 import ContactList from "./views/contactList";
 import Transfer from "./views/transfer";
 import Navbar from "./components/navbar";

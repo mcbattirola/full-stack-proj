@@ -223,7 +223,8 @@ a {
 }
 
 .title-container {
-  /* margin: 20px; */
+  margin: 20px;
+  color: white;
 }
 .crud-back {
   color: #dae1e7;
@@ -253,6 +254,21 @@ a {
 
 .transfer-form {
   padding: 10px;
+  color: #dae1e7;
+}
+.transfer-row {
+  font-size: 16px;
+  margin-top: 16px;
+  font-weight: 400;
+  border-bottom: 3px solid;
+}
+
+.transfer-plus {
+  color: rgb(149, 245, 149);
+  font-weight: 600;
+}
+
+.transfer-minus {
   color: #dae1e7;
 }
 

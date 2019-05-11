@@ -8,6 +8,7 @@ const transferSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  transferReceiver: { type: String },
   received: { type: Boolean }
 });
 

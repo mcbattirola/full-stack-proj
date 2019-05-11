@@ -41,7 +41,8 @@ class TransferForm extends Component {
       headers: this.getHeader(),
       body: JSON.stringify({
         account: this.state.accountNum || "",
-        amount: this.state.amount || ""
+        amount: this.state.amount || "",
+        transferReceiver: this.state.transferReceiver || ""
       })
     });
     result = await result.json();

@@ -245,6 +245,7 @@ const { Transfer, validateTransfers } = require("../models/transfer");
 router.get("/self/transfers/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+
     res.send(
       user
         ? user.transfers
@@ -304,7 +305,7 @@ router.post("/self/transfers/", auth, async (req, res) => {
 
   const transfer = populateTransfer(req);
   transfer.date = Date.now;
-  databaseDebugger("transfer: ", transfer);
+  console.log("transfer: ", transfer);
   user.transfers.push(transfer);
   //save in database
   try {
@@ -449,7 +450,8 @@ function populateTransfer(req) {
     kt: req.body.kt,
     name: req.body.name,
     account: req.body.account,
-    amount: req.body.amount
+    amount: req.body.amount,
+    transferReceiver: req.body.transferReceiver
   });
 }
 function populateCreditCard(req) {

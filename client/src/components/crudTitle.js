@@ -11,11 +11,11 @@ class CrudTitle extends Component {
   render() {
     return (
       <div className="container title-container">
-        <div className="row align-items-center">
+        <div className="row ">
           <div className="col-12 col-sm-1 crud-back" onClick={this.handleBack}>
             Back
           </div>
-          <div className="col-12 col-sm-11 crud-title h1 text-center">
+          <div className="col-12 col-sm-11  h1 text-center">
             {this.props.title}
           </div>
         </div>

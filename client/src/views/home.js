@@ -48,13 +48,15 @@ class Home extends React.Component {
   };
 
   render() {
-    console.log("render chamado, loaded: ", this.state.loaded);
     return (
       <React.Fragment>
         <div className="container balance-container">
           <div className="">
             {this.state.loaded ? (
-              <React.Fragment>
+              <div className="row">
+                <div className="col-12 balance text-center">
+                  Welcome {this.state.user.name}!
+                </div>
                 <div className="col-12 balance text-center">
                   $ {this.state.user.balance.toFixed(2)}
                 </div>
@@ -64,14 +66,14 @@ class Home extends React.Component {
                 >
                   Transfer Now
                 </div>
-              </React.Fragment>
+              </div>
             ) : (
-              <h1> loading</h1>
+              <h1 className="balance"> loading</h1>
             )}
           </div>
         </div>
         <div className="container menu-container">
-          <HomeMenu />
+          <HomeMenu user={this.state.user} />
         </div>
       </React.Fragment>
     );
