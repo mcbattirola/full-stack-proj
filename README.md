@@ -1,5 +1,10 @@
 # Full stack project - Ekki
 
+This is a full stack project. It uses Express.js for the backend and React in the front.
+It has user authentication, uses a JWT to validate API calls and uses MongoDB as database.
+
+
+### Como rodar
 Para rodar o projeto, é necessário:
 mongodb instalado e rodando em localhost:27017 (ou modifique o arquivo config/development.json para a sua porta) e NPM.
 Também é necessário a porta 5000 liberada para o servidor e a 3000 para o server do client (via webpack).
