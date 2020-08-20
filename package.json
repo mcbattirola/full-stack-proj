@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.0.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "*",
     "concurrently": "^3.6.1",
     "config": "^3.1.0",
